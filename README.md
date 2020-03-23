@@ -14,6 +14,5 @@ provided objects:
     * Parralax effect
     * scrolling background
 * animation tool
-
-3d animation ()
-mouse-movable objects
+* 3d animation
+* mouse-movable objects
