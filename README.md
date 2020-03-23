@@ -4,16 +4,16 @@ A pygame-based module that offers high level robust gui objects, while preservin
 
 provided objects:
 
-screen handler
-button
-text input
-radio buttons
-sliders
-pygame surface handler
-animated backgrounds:
-    *Parralax effect
-    *scrolling background
-animation tool
+* screen handler
+* button
+* text input
+* radio buttons
+* sliders
+* pygame surface handler
+* animated backgrounds:
+    * Parralax effect
+    * scrolling background
+* animation tool
 
 3d animation ()
 mouse-movable objects
