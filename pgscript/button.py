@@ -5,10 +5,11 @@ pygame.font.init()
 
 class button():
   """class for simplifying the use of buttons"""
-  def __init__(self, real_col, change_col, x, y, w, h, text, text_col=(0,0,0), anim=True, font_size=(30), wrapping=0, center=True):
+  def __init__(self, real_col, change_col, x, y, w, h, text, text_col=(0,0,0), anim=False, font_size=(30), wrapping=0, text_center=True):
     arial = pygame.font.SysFont('Arial', font_size)
     self.real_col = real_col
     self.change_col = change_col
+
     if anim:
         self.colour = [self.real_col[0],self.real_col[1],self.real_col[2],self.real_col[3]]
     else:
@@ -19,14 +20,16 @@ class button():
     self.plain_text = text
     self.pressed = False
     self.wrapping = wrapping
-    self.wrapped = [] 
+    self.wrapped_text = [] 
     self.anim = anim 
+
     #text wrapping inside the button
     if self.wrapping:
       self.text = []
-      self.wrapped = textwrap.wrap(text, self.wrapping)
+      self.wrapped_text = textwrap.wrap(text, self.wrapping)
       sliced = []
-      for line in self.wrapped:
+
+      for line in self.wrapped_text:
         line = line.split("%")
         for n in line:
             sliced.append(n)
@@ -35,11 +38,13 @@ class button():
           self.text.append(arial.render(n, True, text_col))
     else:
         self.text = [arial.render(text, True, text_col).convert_alpha()]
+
+
   def draw(self, DISPLAY):
+    '''the button is drawn onto a display surface'''
     btn = pygame.Surface((self.rect.width,self.rect.height), pygame.SRCALPHA)
     btn.fill(self.colour)
     DISPLAY.blit(btn, (self.rect.topleft))
-    #pygame.draw.rect(DISPLAY, self.colour, self.rect)
 
     #centering the text in the middle of the button
     if self.center:
@@ -56,7 +61,7 @@ class button():
            if self.colour[3] < self.change_col[3]:
                self.colour[3] += 10
         else:
-            if self.colour[3] > self.real_col[3]: #using 100 because self.real_col did not work
+            if self.colour[3] > self.real_col[3]: 
                 self.colour[3] -= 5 
     else:
         if self.isOver(pygame.mouse.get_pos()):
@@ -65,6 +70,7 @@ class button():
             self.colour = self.real_col
 
   def isOver(self, mouse_pos):
+    '''determine if the mouse cursor is hovering over the button'''
     if self.rect.collidepoint(mouse_pos[0], mouse_pos[1]):
       return True
 
@@ -72,7 +78,7 @@ class button():
   
 
   def update(self, event):
-    #if event.type == pygame.MOUSEMOTION:
+    '''update the button given the coordinates of the mouse. intended to be run in a loop'''
     if event.type == pygame.MOUSEBUTTONDOWN:
         if self.isOver(pygame.mouse.get_pos()):
             self.pressed = True
