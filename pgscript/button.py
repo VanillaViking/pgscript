@@ -1,27 +1,30 @@
 import pygame
 import textwrap
-pygame.font.init()
+from pgscript import animate
 
+pygame.font.init()
 
 class button():
   """class for simplifying the use of buttons"""
-  def __init__(self, real_col, change_col, x, y, w, h, text, text_col=(0,0,0), anim=False, font_size=(30), wrapping=0, text_center=True):
+  def __init__(self, DISPLAY, real_col, change_col, x, y, w, h, text, text_col=(0,0,0), anim=False, font_size=(30), wrapping=0, text_center=True):
     arial = pygame.font.SysFont('Arial', font_size)
+
+    self.display = DISPLAY
     self.real_col = real_col
     self.change_col = change_col
+    self.active = False
 
-    if anim:
-        self.colour = [self.real_col[0],self.real_col[1],self.real_col[2],self.real_col[3]]
-    else:
-        self.colour = [self.real_col[0],self.real_col[1],self.real_col[2]]
+    self.colour = self.real_col[:]
 
     self.rect = pygame.Rect(x,y,w,h)
-    self.center = center
+    self.center = text_center
     self.plain_text = text
     self.pressed = False
     self.wrapping = wrapping
     self.wrapped_text = [] 
     self.anim = anim 
+
+    self.anim_handler = animate.interrupt_anim()
 
     #text wrapping inside the button
     if self.wrapping:
@@ -40,11 +43,11 @@ class button():
         self.text = [arial.render(text, True, text_col).convert_alpha()]
 
 
-  def draw(self, DISPLAY):
+  def draw(self):
     '''the button is drawn onto a display surface'''
     btn = pygame.Surface((self.rect.width,self.rect.height), pygame.SRCALPHA)
     btn.fill(self.colour)
-    DISPLAY.blit(btn, (self.rect.topleft))
+    self.display.blit(btn, (self.rect.topleft))
 
     #centering the text in the middle of the button
     if self.center:
@@ -54,20 +57,26 @@ class button():
     
     #printing the text in
     for line in self.text:
-      DISPLAY.blit(line, (self.rect.center[0] - (line.get_width()/2), ypos))
+      self.display.blit(line, (self.rect.center[0] - (line.get_width()/2), ypos))
       ypos += 30
+
     if self.anim:
-        if self.isOver(pygame.mouse.get_pos()):
-           if self.colour[3] < self.change_col[3]:
-               self.colour[3] += 10
-        else:
-            if self.colour[3] > self.real_col[3]: 
-                self.colour[3] -= 5 
+        if self.isOver(pygame.mouse.get_pos()) != self.active: #only calls animation function once when button state changes
+            self.active = not self.active
+            
+            #interruptable animations are used in case the button state changes faster than the animations execute
+            if self.active:
+                self.anim_handler.interrupt() 
+                self.anim_handler.int_animate(self.colour[:], self.change_col[:], self.anim_button, [],100)   
+            else:
+                self.anim_handler.interrupt()
+                animate.animate(self.colour[:], self.real_col[:], self.anim_button, [],100)   
+
     else:
         if self.isOver(pygame.mouse.get_pos()):
-            self.colour = self.change_col 
+            self.colour = self.change_col[:] 
         else:
-            self.colour = self.real_col
+            self.colour = self.real_col[:]
 
   def isOver(self, mouse_pos):
     '''determine if the mouse cursor is hovering over the button'''
@@ -75,11 +84,16 @@ class button():
       return True
 
     return False 
-  
 
   def update(self, event):
-    '''update the button given the coordinates of the mouse. intended to be run in a loop'''
+    '''update the button given the coordinates of the mouse'''
     if event.type == pygame.MOUSEBUTTONDOWN:
         if self.isOver(pygame.mouse.get_pos()):
             self.pressed = True
-    
+
+
+  def anim_button(self, start): #function to be run with the animation tool
+    self.colour = start
+
+
+
