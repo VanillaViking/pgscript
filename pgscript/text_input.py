@@ -14,11 +14,13 @@ class text_input():
         self.passive_col = passive_col
         self.colour = self.passive_col
         self.text = text
+
+
         self.text_surface = FONT.render(text,True, text_col)
         self.text_col = text_col
         self.clicked = False
         self.count = 0
-        self.anim_x = -10
+        self.frame_count = -10
 
         self.cursor_shift_val = 0
         self.cursor_rect = pygame.Rect(self.rect.x +4, self.rect.y + 5, 3, self.text_surface.get_height() - 5)
@@ -36,7 +38,8 @@ class text_input():
             else:
                 self.active = False
                 self.colour = self.passive_col
-        if event.type == pygame.KEYDOWN:
+
+        if event.type == pygame.KEYDOWN: #logic for keypresses when the text field is focused
             if self.active:
                 if event.key == pygame.K_BACKSPACE:
                     if self.cursor_pos > 0:
@@ -62,24 +65,23 @@ class text_input():
                         self.cursor_pos += 1
 
                 else:
-                    self.text = self.text[:self.cursor_pos] + event.unicode + self.text[self.cursor_pos:]
-                    self.cursor_rect.x += FONT.size(self.text[self.cursor_pos])[0] #add the size of the individual character, since the sizes vary
-                    self.cursor_pos += 1
+                    if event.unicode:
+                        self.text = self.text[:self.cursor_pos] + event.unicode + self.text[self.cursor_pos:]
+                        self.cursor_rect.x += FONT.size(self.text[self.cursor_pos])[0] #add the size of the individual character, since the sizes vary
+                        self.cursor_pos += 1
                 self.text_surface = FONT.render(self.text, True,self.text_col)
 
     def draw(self): 
             
-        self.display.blit(self.text_surface, (self.rect.x+5,self.rect.y+5))
-        pygame.draw.rect(self.display, (self.colour), self.rect, 2)
+        self.display.blit(self.text_surface, (self.rect.x+5,self.rect.y+5)) #text inside the textfield
+        pygame.draw.rect(self.display, (self.colour), self.rect, 2) #text box 
 
+
+        #cursor
         if self.active: 
-            if self.count <= 200 and self.count >= 100:
-                #pygame.draw.rect(self.display, (self.count, self.count, self.count), pygame.Rect(self.rect.x+10+self.text_surface.get_width(), self.rect.y + 5, 3, self.text_surface.get_height() - 5)) 
-                pygame.draw.rect(self.display, (self.count, self.count, self.count), self.cursor_rect)
+            if self.frame_count > 0: #only display the cursor when frame count is positive. This causes a blinking effect
+                pygame.draw.rect(self.display, self.text_col, self.cursor_rect)
            
-            self.count = (-(1/25) * ((self.anim_x - 50)**2)) + 200
-            #self.cursor_rect.x = (self.rect.x + 10) + (self.cursor_pos * )
-
-        self.anim_x += 1
-        if self.anim_x >= 100:
-            self.anim_x = -40
+        self.frame_count += 1
+        if self.frame_count >= 60:
+            self.frame_count = -60
