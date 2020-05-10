@@ -4,13 +4,12 @@ import random
 import time
 
 class scrolling_bg():
-    def __init__(self, DISPLAY, bg_color, image_paths, objects, spin=False):
+    def __init__(self, DISPLAY, bg_color, image_paths, objects):
         self.bg_color = bg_color
         self.images = []
         self.display = DISPLAY
         self.objects_a = [] #[image, [x,y]]
         self.stop = False
-        self.spin = spin
         
         for n in image_paths:
             self.images.append(pygame.image.load(n).convert_alpha())
@@ -24,9 +23,6 @@ class scrolling_bg():
             self.display.blit(self.images[n[0]], (n[1][0],n[1][1]))
 
 
-        if self.spin:
-            for c, img in enumerate(self.images):
-                self.images[c] = pygame.transform.rotate(img, 1)
 
 
         
