@@ -85,3 +85,9 @@ class text_input():
         self.frame_count += 1
         if self.frame_count >= 60:
             self.frame_count = -60
+
+    def get_text(self):
+        return self.text
+
+    def clear_text(self):
+        self.text = ''

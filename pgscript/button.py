@@ -95,5 +95,10 @@ class button():
   def anim_button(self, start): #function to be run with the animation tool
     self.colour = start
 
+  def get_state(self):
+      return self.pressed
+
+  def reset_state(self):
+      self.pressed = False
 
 
