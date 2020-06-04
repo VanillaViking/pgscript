@@ -28,7 +28,6 @@ class draggable_surface():
             self.pos = (mouse[0] - self.offset[0], mouse[1] - self.offset[1])
 
 
-
     def isOver(self, mouse_pos):
         '''determine if the mouse cursor is hovering over'''
         if pygame.Rect(self.pos[0],self.pos[1],self.surface.get_width(),self.surface.get_height()).collidepoint(mouse_pos[0], mouse_pos[1]):
@@ -36,4 +35,9 @@ class draggable_surface():
 
         return False 
 
+    
+    def get_pos(self):
+       return self.pos
 
+    def set_pos(self, new_pos):
+       self.pos = new_pos

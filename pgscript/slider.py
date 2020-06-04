@@ -39,4 +39,4 @@ class slider():
         return self.rect.width/self.range
 
     def set_value(self, value):
-        self.rect.width = int(value*200) 
+        self.rect.width = int(value * self.range) 
