@@ -10,4 +10,5 @@ class scrolling_screen():
     def get_surface(self):
         return self.surface
 
-
+    def draw(self):
+        pass
