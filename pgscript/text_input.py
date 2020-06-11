@@ -30,9 +30,11 @@ class text_input():
             self.cursor_pos = 0
 
 
-    def update(self, event):
+    def update(self, event, mouse_pos=None):
+        if not mouse_pos:
+            mouse_pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos):
+            if self.rect.collidepoint(mouse_pos):
                 self.active = True
                 self.colour = self.active_col
             else:

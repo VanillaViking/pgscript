@@ -60,8 +60,25 @@ class button():
       self.display.blit(line, (self.rect.center[0] - (line.get_width()/2), ypos))
       ypos += 30
 
+
+  def isOver(self, mouse_pos):
+    '''determine if the mouse cursor is hovering over the button'''
+    if self.rect.collidepoint(mouse_pos[0], mouse_pos[1]):
+      return True
+
+    return False 
+
+  def update(self, event, mouse_pos=None):
+    '''update the button given the coordinates of the mouse'''
+    if not mouse_pos:
+        mouse_pos = pygame.mouse.get_pos()
+
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if self.isOver(mouse_pos):
+            self.pressed = True
+
     if self.anim:
-        if self.isOver(pygame.mouse.get_pos()) != self.active: #only calls animation function once when button state changes
+        if self.isOver(mouse_pos) != self.active: #only calls animation function once when button state changes
             self.active = not self.active
             
             #interruptable animations are used in case the button state changes faster than the animations execute
@@ -73,23 +90,10 @@ class button():
                 animate.animate(self.colour[:], self.real_col[:], self.anim_button, [],100)   
 
     else:
-        if self.isOver(pygame.mouse.get_pos()):
+        if self.isOver(mouse_pos):
             self.colour = self.change_col[:] 
         else:
             self.colour = self.real_col[:]
-
-  def isOver(self, mouse_pos):
-    '''determine if the mouse cursor is hovering over the button'''
-    if self.rect.collidepoint(mouse_pos[0], mouse_pos[1]):
-      return True
-
-    return False 
-
-  def update(self, event):
-    '''update the button given the coordinates of the mouse'''
-    if event.type == pygame.MOUSEBUTTONDOWN:
-        if self.isOver(pygame.mouse.get_pos()):
-            self.pressed = True
 
 
   def anim_button(self, start): #function to be run with the animation tool

@@ -7,6 +7,7 @@ class draggable_surface():
         self.pos = start_pos
         self.offset = None #how far away the mouse is from the top left corner of the surface
         self.active = False
+        self.rect = pygame.Rect(self.pos[0], self.pos[1], self.surface.get_width(), self.surface.get_height())
 
         
     
@@ -14,8 +15,9 @@ class draggable_surface():
         self.display.blit(self.surface, self.pos)
 
 
-    def update(self, event):
-        mouse = pygame.mouse.get_pos()
+    def update(self, event, mouse=None):
+        if not mouse:
+            mouse = pygame.mouse.get_pos()
         if self.isOver(mouse):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.active = True
@@ -27,6 +29,7 @@ class draggable_surface():
         if self.active:
             self.pos = (mouse[0] - self.offset[0], mouse[1] - self.offset[1])
 
+        self.rect = pygame.Rect(self.pos[0], self.pos[1], self.surface.get_width(), self.surface.get_height())
 
     def isOver(self, mouse_pos):
         '''determine if the mouse cursor is hovering over'''

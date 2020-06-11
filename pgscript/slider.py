@@ -13,9 +13,9 @@ class slider():
         pygame.draw.rect(self.display, self.colour, self.border_rect, 1) 
         pygame.draw.rect(self.display,self.colour, self.rect)
 
-    def update(self, event):
-        mouse_pos = pygame.mouse.get_pos()
-
+    def update(self, event, mouse_pos=None):
+        if not mouse_pos:
+            mouse_pos = pygame.mouse.get_pos()
         #the slider needs to be active even when the mouse is off the rectangle to allow ease of use.
         if self.border_rect.collidepoint(mouse_pos[0], mouse_pos[1]):
             if event.type == pygame.MOUSEBUTTONDOWN:
