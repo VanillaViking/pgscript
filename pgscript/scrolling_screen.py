@@ -1,4 +1,5 @@
 import pygame
+import pgscript
 
 class scrolling_screen():
     def __init__(self, DISPLAY, vertical_size, v_scrollbar_pos, v_scrollbar_width, scroll_step, scrollbar_color):
@@ -24,7 +25,9 @@ class scrolling_screen():
     def draw(self):
         self.surface.fill((255,255,255,0))
         for obj in self.objects:
-            if (obj.rect.y + obj.rect.height + self.v_scroll_pos) > 0 and (obj.rect.y + self.v_scroll_pos) < self.display.get_height():   #checking whether object is on the screen
+            if type(obj) is pgscript.text.text:
+                obj.draw()
+            elif (obj.rect.y + obj.rect.height + self.v_scroll_pos) > 0 and (obj.rect.y + self.v_scroll_pos) < self.display.get_height():   #checking whether object is on the screen
                 obj.draw()
         self.display.blit(self.surface, (0, self.v_scroll_pos))
 
@@ -35,8 +38,8 @@ class scrolling_screen():
     def update(self, event):
         mouse_pos = pygame.mouse.get_pos()
         for i in self.objects:
-
-            i.update(event, (mouse_pos[0],mouse_pos[1] - self.v_scroll_pos)) #adjusting mouse coordinates according to scrolled position
+            if type(i) is not pgscript.text.text:
+                i.update(event, (mouse_pos[0],mouse_pos[1] - self.v_scroll_pos)) #adjusting mouse coordinates according to scrolled position
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 5 and (self.v_scroll_pos + self.surface.get_height()) > self.display.get_height():   #SCROLL DOWN
