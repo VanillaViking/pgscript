@@ -11,8 +11,10 @@ class text():
         self.color = color
         self.draw_group = []
         
-    def message(self, text, pos, duration=0):
+    def message(self, text, pos, duration=0, center=True):
         text_surf = self.font.render(text, True, self.color)
+        if center:
+            pos = (pos[0] - text_surf.get_width()/2, pos[1] - text_surf.get_height()/2) 
         text_obj = [text_surf,pos]
         self.draw_group.append(text_obj)
 

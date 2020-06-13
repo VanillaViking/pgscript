@@ -13,9 +13,9 @@ class scrolling_screen():
         self.scroll_active = False
         self.scrollbar_offset = None
         
-        if v_scrollbar_pos == 'l':
+        if v_scrollbar_pos == 'r':
             self.scrollbar_border = pygame.Rect(self.display.get_width() - v_scrollbar_width -1, 0, v_scrollbar_width +1, self.display.get_height())
-        elif v_scrollbar_pos == 'r':
+        elif v_scrollbar_pos == 'l':
             self.scrollbar_border = pygame.Rect(0,0, v_scrollbar_width+1, self.display.get_height())
 
         self.scrollbar = pygame.Rect(self.scrollbar_border.x + 1, 0, v_scrollbar_width, self.display.get_height()/vertical_size)
@@ -23,7 +23,6 @@ class scrolling_screen():
         self.surface = pygame.Surface((self.display.get_width(), self.display.get_height() * vertical_size), pygame.SRCALPHA) #users need to draw onto this surfacce instead of display
     
     def draw(self):
-        self.surface.fill((255,255,255,0))
         for obj in self.objects:
             if type(obj) is pgscript.text.text:
                 obj.draw()
@@ -55,7 +54,7 @@ class scrolling_screen():
                 self.scroll_active = True
                 self.scrollbar_offset = (mouse_pos[1] - self.scrollbar.y)
 
-        elif event.type == pygame.MOUSEBUTTONUP:
+        if event.type == pygame.MOUSEBUTTONUP:
             self.scroll_active = False
             self.offset = None
 
