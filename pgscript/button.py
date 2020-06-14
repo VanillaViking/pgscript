@@ -6,15 +6,15 @@ pygame.font.init()
 
 class button():
   """class for simplifying the use of buttons"""
-  def __init__(self, DISPLAY, real_col, change_col, x, y, w, h, text, text_col=(0,0,0), anim=False, font_size=(30), wrapping=0, text_center=True):
+  def __init__(self, DISPLAY, passive_col, active_col, x, y, w, h, text, text_col=(0,0,0), anim=False, font_size=(30), wrapping=0, text_center=True):
     arial = pygame.font.SysFont('Arial', font_size)
 
     self.display = DISPLAY
-    self.real_col = real_col
-    self.change_col = change_col
+    self.passive_col = passive_col
+    self.active_col = active_col
     self.active = False
 
-    self.colour = self.real_col[:]
+    self.colour = self.passive_col[:]
 
     self.rect = pygame.Rect(x,y,w,h)
     self.center = text_center
@@ -84,16 +84,16 @@ class button():
             #interruptable animations are used in case the button state changes faster than the animations execute
             if self.active:
                 self.anim_handler.interrupt() 
-                self.anim_handler.int_animate(self.colour[:], self.change_col[:], self.anim_button, [],100)   
+                self.anim_handler.int_animate(self.colour[:], self.active_col[:], self.anim_button, [],100)   
             else:
                 self.anim_handler.interrupt()
-                animate.animate(self.colour[:], self.real_col[:], self.anim_button, [],100)   
+                animate.animate(self.colour[:], self.passive_col[:], self.anim_button, [],100)   
 
     else:
         if self.isOver(mouse_pos):
-            self.colour = self.change_col[:] 
+            self.colour = self.active_col[:] 
         else:
-            self.colour = self.real_col[:]
+            self.colour = self.passive_col[:]
 
 
   def anim_button(self, start): #function to be run with the animation tool
