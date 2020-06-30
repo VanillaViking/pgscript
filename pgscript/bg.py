@@ -4,7 +4,7 @@ import random
 import time
 
 class scrolling_bg():
-    def __init__(self, DISPLAY, bg_color, image_paths, objects):
+    def __init__(self, DISPLAY, image_paths, bg_color, objects):
         self.bg_color = bg_color
         self.images = []
         self.display = DISPLAY

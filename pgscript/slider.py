@@ -1,16 +1,17 @@
 import pygame
 
 class slider():
-    def __init__(self, DISPLAY, colour, rect):
+    def __init__(self, DISPLAY, colour, border_colour, rect):
         self.display = DISPLAY
         self.colour = colour
+        self.border_colour = border_colour
         self.rect = pygame.Rect(rect)
         self.range = self.rect.width
-        self.border_rect = pygame.Rect(self.rect.x - 1, self.rect.y - 1, self.rect.width + 1, self.rect.height + 1)        
+        self.border_rect = pygame.Rect(self.rect.x - 1, self.rect.y - 1, self.rect.width + 2, self.rect.height + 2)        
         self.active = False
  
     def draw(self):
-        pygame.draw.rect(self.display, self.colour, self.border_rect, 1) 
+        pygame.draw.rect(self.display, self.border_colour, self.border_rect, 1) 
         pygame.draw.rect(self.display,self.colour, self.rect)
 
     def update(self, event, mouse_pos=None):

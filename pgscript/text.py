@@ -18,7 +18,7 @@ class text():
         text_surf = self.font.render(text, True, self.color)
 
         if center: #center the text at the given position?
-            pos = (pos[0] - text_surf.get_width()/2, pos[1] - text_surf.get_height()/2) 
+            pos = (pos[0] - text_surf.get_width()/2, pos[1]-text_surf.get_height()/2) 
         text_obj = (text_surf,pos)
 
         exist = False
@@ -30,7 +30,7 @@ class text():
         if not exist:
             self.draw_group.append(text_obj)
 
-            self.text_end = pos[1] + self.font.size(text)[1]
+            self.text_end = (pos[0] + self.font.size(text)[0],pos[1])
 
             if duration: #if a duration is given, start the wait timer on a different thread
                 message_wait_thread = threading.Thread(target=self.message_timer, args=(text_obj, duration))
@@ -62,6 +62,6 @@ class text():
             self.draw_group.append(text_obj)
             y_offset += self.font.size(line)[1] + line_spacing
 
-        self.text_end = pos[1] + y_offset
+        self.text_end = (pos[0] + self.font.size(line)[0],pos[1]+ y_offset - self.font.size(line)[1] - line_spacing)
 
         
