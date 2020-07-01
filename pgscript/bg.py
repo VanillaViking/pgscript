@@ -46,10 +46,9 @@ class scrolling_bg():
 
 
 class parallax_bg():
-    def __init__(self, DISPLAY, image_path):
+    def __init__(self, DISPLAY, image_path, ratio=1.02):
         self.display = DISPLAY
-        self.ratio = 1.02 #scales the background 1.2 times the display for parallax purposes
-
+        self.ratio = ratio #scales the background 1.2 times the display for parallax purposes
  
         self.image = pygame.transform.scale(pygame.image.load(image_path), (int(DISPLAY.get_width() * self.ratio), int(DISPLAY.get_height() * self.ratio))).convert_alpha()
  
