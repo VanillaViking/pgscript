@@ -74,8 +74,9 @@ class button():
         mouse_pos = pygame.mouse.get_pos()
 
     if event.type == pygame.MOUSEBUTTONDOWN:
-        if self.isOver(mouse_pos):
-            self.pressed = True
+        if event.button == 1:
+            if self.isOver(mouse_pos):
+                self.pressed = True
 
     if self.anim:
         if self.isOver(mouse_pos) != self.active: #only calls animation function once when button state changes

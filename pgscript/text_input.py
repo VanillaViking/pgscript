@@ -16,6 +16,7 @@ class text_input():
         self.colour = self.passive_col
         self.text = text
         self.FONT = pygame.font.SysFont('arial', font_size)
+        self.text_offset = 0
 
         self.text_surface = self.FONT.render(text,True, text_col)
         self.text_col = text_col
@@ -23,12 +24,10 @@ class text_input():
         self.count = 0
         self.frame_count = -10
 
+        self.text_surface = self.FONT.render(self.text[self.text_offset:self.get_visible_len()+1], True,self.text_col)
         self.cursor_shift_val = 0
-        self.cursor_rect = pygame.Rect(self.rect.x+ self.FONT.size(self.text)[0] +4, self.rect.y + 5, 3, self.text_surface.get_height() - 5)
-        if self.text:
-            self.cursor_pos = len(self.text)
-        else:
-            self.cursor_pos = 0
+        self.cursor_rect = pygame.Rect(self.rect.x +4, self.rect.y + 5, 3, self.text_surface.get_height() - 5)
+        self.cursor_pos = 0
 
 
     def update(self, event, mouse_pos=None):
@@ -46,7 +45,6 @@ class text_input():
             if self.active:
                 if event.key == pygame.K_BACKSPACE:
                     if self.cursor_pos > 0:
-                        #self.cursor_rect.x -= self.FONT.size(self.text[self.cursor_pos-1])[0]
                         self.text = self.text[:self.cursor_pos-1] + self.text[self.cursor_pos:] 
                         self.cursor_pos -= 1
                 elif event.key == pygame.K_RETURN:
@@ -60,20 +58,29 @@ class text_input():
                 elif event.key == pygame.K_LEFT:
                     if self.cursor_pos > 0:
                         self.cursor_pos -= 1
-                        #self.cursor_rect.x -= self.FONT.size(self.text[self.cursor_pos])[0]
 
                 elif event.key == pygame.K_RIGHT:
                     if self.cursor_pos < len(self.text):
-                        #self.cursor_rect.x += self.FONT.size(self.text[self.cursor_pos])[0]
                         self.cursor_pos += 1
 
                 else:
                     if event.unicode:
                         self.text = self.text[:self.cursor_pos] + event.unicode + self.text[self.cursor_pos:]
                         self.cursor_pos += 1
+                
+                self.cursor_rect.x = self.rect.x +5+ self.FONT.size(self.text[self.text_offset:self.cursor_pos])[0] #size is from start of text to position of cursor
 
-                self.cursor_rect.x = self.rect.x +5+ self.FONT.size(self.text[:self.cursor_pos])[0] #size is from start of text to position of cursor
-                self.text_surface = self.FONT.render(self.text, True,self.text_col)
+                while self.cursor_rect.x >= self.rect.x +self.rect.width - 20:
+                    self.text_offset += 1
+                    self.cursor_rect.x = self.rect.x +5+ self.FONT.size(self.text[self.text_offset:self.cursor_pos])[0] #size is from start of text to position of cursor
+
+                if self.cursor_rect.x < self.rect.x+20 and self.text_offset:
+                    if self.text_offset:
+                        self.text_offset -= 1
+
+                self.cursor_rect.x = self.rect.x +5+ self.FONT.size(self.text[self.text_offset:self.cursor_pos])[0] #size is from start of text to position of cursor
+                self.text_surface = self.FONT.render(self.text[self.text_offset:self.get_visible_len()+1], True,self.text_col)
+
 
     def draw(self): 
             
@@ -90,3 +97,29 @@ class text_input():
 
     def clear_text(self):
         self.text = ''
+
+    def set_text(self, text):
+        self.text = text
+        self.cursor_pos = 0
+        self.cursor_rect.x = self.rect.x +5+ self.FONT.size(self.text[self.text_offset:self.cursor_pos])[0] #size is from start of text to position of cursor
+
+        while self.cursor_rect.x >= self.rect.x +self.rect.width - 20:
+            self.text_offset += 1
+            self.cursor_rect.x = self.rect.x +5+ self.FONT.size(self.text[self.text_offset:self.cursor_pos])[0] #size is from start of text to position of cursor
+
+        if self.cursor_rect.x < self.rect.x+20 and self.text_offset:
+            if self.text_offset:
+                self.text_offset -= 1
+
+        self.cursor_rect.x = self.rect.x +5+ self.FONT.size(self.text[self.text_offset:self.cursor_pos])[0] #size is from start of text to position of cursor
+        self.text_surface = self.FONT.render(self.text[self.text_offset:self.get_visible_len()+1], True,self.text_col)
+
+
+    def get_visible_len(self):
+        n = 0
+        for n in range(self.text_offset, len(self.text)):
+            if self.FONT.size(self.text[self.text_offset:n])[0]+10 >= self.rect.width:
+                n-=1
+                break
+        
+        return n
